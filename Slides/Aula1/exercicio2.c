@@ -52,7 +52,7 @@ void removernome(char lista[][100], int *total) {
             strcpy(lista[i], lista[i + 1]);
         }
         (*total)--;
-        printf("Nome remo ticovido.\n");
+        printf("Nome removido.\n");
     } else {
         printf("Nome nao encontrado.\n");
     }
