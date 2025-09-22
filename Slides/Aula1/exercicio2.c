@@ -16,7 +16,7 @@ int menu() {
         printf("4. Sair\n");
         scanf("%d ", &c);
     }while(c<1 || c>4);
-
+    getchar();
     return c;
 }
 
@@ -85,7 +85,7 @@ int main() {
                 listarnomes(lista_de_nomes, total_nomes);
                 break;
             case 4:
-
+                exit(0);
         }
     } while (opcao);
 
