@@ -18,7 +18,7 @@ int main()
     numero = temp;
 
     for (i = 5; i < 10; i++){
-        numero[i]=i+1;
+        numero[i]=i+2;
     }
 
     for ( i = 0; i < 10; i++)
