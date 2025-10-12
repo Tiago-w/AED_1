@@ -1,0 +1,21 @@
+# Arquivos compilados e executáveis
+*.o
+*.exe
+*.out
+*.dll
+*.so
+
+# Pastas de build que podem ser geradas por IDEs
+build/
+bin/
+
+# Arquivos de depuração
+*.dSYM/
+
+# Arquivos de configuração de editores de código
+.vscode/
+.idea/
+
+# Arquivos temporários do sistema operacional
+.DS_Store
+Thumbs.db
