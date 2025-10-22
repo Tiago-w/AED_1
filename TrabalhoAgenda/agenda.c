@@ -80,33 +80,35 @@ void exibirMenu()
 }
 void adicionarPessoa(void **pbuffer)
 {
-    void *tempbuffer = realloc(*pbuffer, pessoa + (*(int *)(pbuffer + contadorPessoas) + 1) * (gavetaPessoa));
+
+    void *tempbuffer = realloc(*pbuffer, pessoa + (*(int *)(*pbuffer + contadorPessoas) + 1) * (gavetaPessoa));
 
     if (!tempbuffer)
     {
-        printf("erro de memoria but\n");
+        printf("erro de memoria\n");
         return;
     }
 
     *pbuffer = tempbuffer;
 
-    char *destino = (char *)(pbuffer + pessoa) + (*(int *)(pbuffer + contadorPessoas));
+    char *destino = (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa);
 
-    printf("digite o nome but: \n");
+    printf("digita o nome but:\n");
     scanf(" %[^\n]", destino);
     while (getchar() != '\n')
         ;
 
-    printf("digite a idade but: \n");
+    printf("digita a idade but:\n");
     scanf("%d", (int *)(destino + nome));
     while (getchar() != '\n')
         ;
 
-    printf("digite o email but: \n");
-    scanf("%d", (int *)(destino + nome + idade));
-    while (getchar() != '\n');
+    printf("digita o email but:\n");
+    scanf(" %[^\n]", destino + nome + idade);
+    while (getchar() != '\n')
+        ;
 
-    (*(int *)(pbuffer+contadorPessoas))++;
+    (*(int *)(*pbuffer + contadorPessoas))++;
 
     printf("deu but\n");
 }
