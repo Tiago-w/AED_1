@@ -113,17 +113,17 @@ void adicionarPessoa(void **pbuffer)
     memcpy(
         (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa),
         (char *)(*pbuffer + nomeT),
-        nome);
+        sizeof(char)*nomeT);
 
     memcpy(
         (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa) + nome,
         (int *)(*pbuffer + idadeT),
-        idade);
+        sizeof(int));
 
     memcpy(
         (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa) + nome + idade,
         (char *)(*pbuffer + emailT),
-        email);
+        sizeof(char)*emailT);
 
     (*(int *)(*pbuffer + contadorPessoas))++;
 
