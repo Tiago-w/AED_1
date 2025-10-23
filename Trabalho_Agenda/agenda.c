@@ -11,7 +11,7 @@
 #define escolhaMenu (contadorPessoas + sizeof(int))
 #define contadorLaço (escolhaMenu + sizeof(int))
 #define pessoa (contadorLaço + sizeof(int))
-#define temp (pessoa+(sizeof(char)*50))
+#define temp (pessoa + (sizeof(char) * 50))
 
 void exibirMenu(void);
 void adicionarPessoa(void **pbuffer);
@@ -95,8 +95,6 @@ void adicionarPessoa(void **pbuffer)
     while (getchar() != '\n')
         ;
 
-    // if
-
     printf("digita a idade but:\n");
     scanf("%d", (int *)(destino + nome));
     while (getchar() != '\n')
@@ -106,6 +104,19 @@ void adicionarPessoa(void **pbuffer)
     scanf(" %[^\n]", destino + nome + idade);
     while (getchar() != '\n')
         ;
+    int *contadorP = (int *)(*pbuffer + contadorPessoas);
+    int *contadorFor = (int *)(*pbuffer + contadorLaço);
+  
+        for (*contadorFor = 0; *contadorFor < *contadorP; (*contadorFor)++)
+        {
+            char *nomeAtual = (char *)(*pbuffer + temp) + (*contadorFor * gavetaPessoa);
+            if (strcmp(nomeAtual + nome + idade, destino + nome + idade) == 0 && *contadorP>0)
+            {
+                printf("Essa pessoa já esta cadastrada de acordo com o email.\n");
+                return;
+            }
+        }
+    
 
     (*(int *)(*pbuffer + contadorPessoas))++;
 
