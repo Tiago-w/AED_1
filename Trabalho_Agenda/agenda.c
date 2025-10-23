@@ -16,8 +16,9 @@
 void exibirMenu(void);
 void adicionarPessoa(void **pbuffer);
 void listarPessoas(void *pbuffer);
+//void buscarPessoa(void *pbuffer);
+
 // void removerPessoa();
-// void buscarPessoa();
 
 int main()
 {
@@ -47,7 +48,7 @@ int main()
             // removerPessoa();
             break;
         case 3:
-            // buscarPessoa();
+            // buscarPessoa(pbuffer);
             break;
         case 4:
             listarPessoas(pbuffer);
@@ -96,6 +97,8 @@ void adicionarPessoa(void **pbuffer)
     while (getchar() != '\n')
         ;
 
+    // if
+
     printf("digita a idade but:\n");
     scanf("%d", (int *)(destino + nome));
     while (getchar() != '\n')
@@ -118,19 +121,18 @@ void listarPessoas(void *pbuffer)
         printf("ngm aqui but\n");
         return;
     }
+    int *i = (int *)(pbuffer + contadorLaço);
+    int *cp = (int *)(pbuffer + contadorPessoas);
 
-    *(int *)(pbuffer + contadorLaço) = 0;
-
-    void *cont = (int *)(pbuffer + contadorLaço);
-
-    for (*(int *)(pbuffer + contadorLaço) = 0; *(int *)cont < *(int *)(pbuffer + contadorPessoas); (*(int *)(pbuffer + contadorLaço))++)
+    for (*i = 0; *i < *cp; (*i)++)
     {
 
-        char *registroatual = (char *)(pbuffer + pessoa) + (*(int *)(pbuffer + contadorLaço) * gavetaPessoa);
-       
-        printf("\n%d\n", *(int *)(pbuffer + contadorLaço) + 1);
+        char *registroatual = (char *)(pbuffer + pessoa) + (*i * gavetaPessoa);
+
+        printf("\n%d\n", *i + 1);
         printf("nome: %s\n", registroatual);
         printf("idade: %d\n", *(int *)(registroatual + nome));
         printf("email: %s\n", registroatual + nome + idade);
     }
 }
+
