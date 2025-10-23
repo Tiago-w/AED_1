@@ -37,15 +37,13 @@ int main()
     *(int *)(pbuffer + contadorPessoas) = 0;
     *(int *)(pbuffer + escolhaMenu) = 0;
 
-    int *escolha = (int *)(pbuffer + escolhaMenu);
-
     do
     {
 
         exibirMenu();
-        scanf("%d", escolha);
+        scanf("%d", (int *)(pbuffer + escolhaMenu));
 
-        switch (*escolha)
+        switch (*(int *)(pbuffer + escolhaMenu))
         {
         case 1:
             adicionarPessoa(&pbuffer);
@@ -67,7 +65,7 @@ int main()
             break;
         }
 
-    } while (*escolha != 5);
+    } while (*(int *)(pbuffer + escolhaMenu) != 5);
 
     free(pbuffer);
     return 0;
@@ -113,17 +111,17 @@ void adicionarPessoa(void **pbuffer)
     memcpy(
         (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa),
         (char *)(*pbuffer + nomeT),
-        sizeof(char)*nomeT);
+        nome);
 
     memcpy(
         (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa) + nome,
-        (int *)(*pbuffer + idadeT),
-        sizeof(int));
+        (int*)(*pbuffer+idadeT),
+        idade);
 
     memcpy(
         (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa) + nome + idade,
-        (char *)(*pbuffer + emailT),
-        sizeof(char)*emailT);
+        (char *)(*pbuffer + email),
+        email);
 
     (*(int *)(*pbuffer + contadorPessoas))++;
 
