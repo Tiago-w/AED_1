@@ -7,23 +7,21 @@
 #define email 50
 #define gavetaPessoa (nome * sizeof(char) + idade + email * sizeof(char))
 
-// estrutura pbuffer (pessoa é onde começa os dados a serem inseridos)
 #define contadorPessoas 0
 #define escolhaMenu (contadorPessoas + sizeof(int))
 #define contadorLaço (escolhaMenu + sizeof(int))
 #define pessoa (contadorLaço + sizeof(int))
+#define temp (pessoa+(sizeof(char)*50))
 
 void exibirMenu(void);
 void adicionarPessoa(void **pbuffer);
 void listarPessoas(void *pbuffer);
-//void buscarPessoa(void *pbuffer);
-
-// void removerPessoa();
+void buscarPessoa(void *pbuffer);
 
 int main()
 {
 
-    void *pbuffer = malloc(pessoa);
+    void *pbuffer = malloc(temp);
     if (!pbuffer)
     {
         printf("erro de memoria\n");
@@ -48,7 +46,7 @@ int main()
             // removerPessoa();
             break;
         case 3:
-            // buscarPessoa(pbuffer);
+            buscarPessoa(pbuffer);
             break;
         case 4:
             listarPessoas(pbuffer);
@@ -80,7 +78,7 @@ void exibirMenu()
 void adicionarPessoa(void **pbuffer)
 {
 
-    void *tempbuffer = realloc(*pbuffer, pessoa + (*(int *)(*pbuffer + contadorPessoas) + 1) * (gavetaPessoa));
+    void *tempbuffer = realloc(*pbuffer, temp + (*(int *)(*pbuffer + contadorPessoas) + 1) * (gavetaPessoa));
 
     if (!tempbuffer)
     {
@@ -90,7 +88,7 @@ void adicionarPessoa(void **pbuffer)
 
     *pbuffer = tempbuffer;
 
-    char *destino = (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa);
+    char *destino = (char *)(*pbuffer + temp) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa);
 
     printf("digita o nome but:\n");
     scanf(" %[^\n]", destino);
@@ -115,19 +113,19 @@ void adicionarPessoa(void **pbuffer)
 }
 void listarPessoas(void *pbuffer)
 {
+    int *cp = (int *)(pbuffer + contadorPessoas);
 
-    if (*(int *)(pbuffer + contadorPessoas) == 0)
+    if (*cp == 0)
     {
         printf("ngm aqui but\n");
         return;
     }
     int *i = (int *)(pbuffer + contadorLaço);
-    int *cp = (int *)(pbuffer + contadorPessoas);
 
     for (*i = 0; *i < *cp; (*i)++)
     {
 
-        char *registroatual = (char *)(pbuffer + pessoa) + (*i * gavetaPessoa);
+        char *registroatual = (char *)(pbuffer + temp) + (*i * gavetaPessoa);
 
         printf("\n%d\n", *i + 1);
         printf("nome: %s\n", registroatual);
@@ -136,3 +134,32 @@ void listarPessoas(void *pbuffer)
     }
 }
 
+void buscarPessoa(void *pbuffer)
+{
+    int *cp = (int *)(pbuffer + contadorPessoas);
+    int *c = (int *)(pbuffer + contadorLaço);
+    *c = 0;
+
+    char *emailT = (char *)(pbuffer + pessoa);
+
+    printf("Digite o email para buscar uma pessoa: \n");
+    scanf(" %[^\n]", emailT);
+    while (getchar() != '\n')
+        ;
+
+    for (*c = 0; *c < *cp; (*c)++)
+    {
+
+        char *registroAtual = (char *)(pbuffer + temp) + ((*c) * gavetaPessoa);
+
+        if (strcmp(registroAtual + nome + idade, emailT) == 0)
+        {
+            printf("cadastro encontrado\nnome no sistema: ");
+            printf("%s\n", registroAtual);
+            return;
+        }
+    }
+    printf("\ncadastro nao encontrado\n");
+
+    return;
+}
