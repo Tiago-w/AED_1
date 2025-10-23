@@ -16,7 +16,10 @@
 #define idadeT (nomeT + (sizeof(char) * 50))
 #define emailT (idadeT + sizeof(int))
 
-#define pessoa (emailT + (sizeof(char) * 50))
+#define tamanhoNome (emailT + sizeof(char) * 50)
+#define tamanhoEmail (tamanhoNome + sizeof(int))
+
+#define pessoa (tamanhoEmail + sizeof(int))
 
 void exibirMenu(void);
 void adicionarPessoa(void **pbuffer);
@@ -86,20 +89,44 @@ void adicionarPessoa(void **pbuffer)
 
     printf("digita o nome but:\n");
     scanf(" %[^\n]", (char *)(*pbuffer + nomeT));
-    while (getchar() != '\n')
-        ;
+    while (getchar() != '\n');
 
     printf("digita a idade but:\n");
     scanf("%d", (int *)(*pbuffer + idadeT));
-    while (getchar() != '\n')
-        ;
+    while (getchar() != '\n');
 
     printf("digita o email but:\n");
     scanf(" %[^\n]", (char *)(*pbuffer + emailT));
-    while (getchar() != '\n')
-        ;
+    while (getchar() != '\n');
 
-    void *pbufferT = realloc(*pbuffer, pessoa + ((*(int *)(*pbuffer + contadorPessoas) + 1) * gavetaPessoa));
+    *(int *)(*pbuffer + tamanhoNome) = strlen((char *)(*pbuffer + nomeT) + 1);
+    *(int *)(*pbuffer + tamanhoEmail) = strlen((char *)(*pbuffer + emailT) + 1);
+
+    *(int *)(*pbuffer + contadorLaço) = 0;
+    *(int *)(*pbuffer + escolhaMenu) = 0;
+
+    while (*(int *)(*pbuffer + escolhaMenu) < *(int *)(*pbuffer + contadorPessoas))
+    {
+        //posição atual + tamanho do nome
+        *(int *)(*pbuffer + contadorLaço) = *(int *)(*pbuffer + contadorLaço) +
+                                                     strlen((char *)(*pbuffer + pessoa) + 
+                                                                *(int *)(*pbuffer + contadorLaço)) + 1;
+
+        //pula idade
+        *(int *)(*pbuffer + contadorLaço) = *(int *)(*pbuffer + contadorLaço) + sizeof(int);
+
+        //pega posição atual + tamanho do email
+        *(int *)(*pbuffer + contadorLaço) = *(int *)(*pbuffer + contadorLaço) +
+                                                    strlen((char *)(*pbuffer + pessoa) +        
+                                                             *(int *)(*pbuffer + contadorLaço)) + 1;
+
+        (*(int *)(*pbuffer + escolhaMenu))++;
+    }
+
+    void *pbufferT = realloc(*pbuffer, pessoa + *(int *)(*pbuffer + contadorLaço) +
+                                                      *(int *)(*pbuffer + tamanhoNome) +
+                                                                       sizeof(int) +
+                                                                             *(int *)(*pbuffer + tamanhoEmail));
 
     if (!pbufferT)
     {
@@ -108,22 +135,56 @@ void adicionarPessoa(void **pbuffer)
     }
 
     *pbuffer = pbufferT;
-    memcpy(
-        (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa),
-        (char *)(*pbuffer + nomeT),
-        nome);
 
-    memcpy(
-        (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa) + nome,
-        (int*)(*pbuffer+idadeT),
-        idade);
+    // copia nome
+    memcpy((char *)(*pbuffer + pessoa) + *(int *)(*pbuffer + contadorLaço),
+           (char *)(*pbuffer + nomeT),
+           *(int *)(*pbuffer + tamanhoNome ));
 
-    memcpy(
-        (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa) + nome + idade,
-        (char *)(*pbuffer + email),
-        email);
+    *(int *)(*pbuffer + contadorLaço) = *(int *)(*pbuffer + contadorLaço) + *(int *)(*pbuffer + tamanhoNome);
+
+    // copia idade
+    memcpy((char *)(*pbuffer + pessoa) + *(int *)(*pbuffer + contadorLaço),
+           (int *)(*pbuffer + idadeT),
+           sizeof(int));
+
+    *(int *)(*pbuffer + contadorLaço) = *(int *)(*pbuffer + contadorLaço) + sizeof(int);
+
+    // copia email
+    memcpy((char *)(*pbuffer + pessoa) + *(int *)(*pbuffer + contadorLaço),
+           (char *)(*pbuffer + emailT),
+           *(int *)(*pbuffer + tamanhoEmail));
 
     (*(int *)(*pbuffer + contadorPessoas))++;
 
     printf("deu\n");
 }
+
+/*void *pbufferT = realloc(*pbuffer, pessoa + ((*(int *)(*pbuffer + contadorPessoas) + 1) * gavetaPessoa));
+
+if (!pbufferT)
+{
+    printf("erro de memoria\n");
+    return;
+}
+
+*pbuffer = pbufferT;
+memcpy(
+    (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa),
+    (char *)(*pbuffer + nomeT),
+    nome);
+
+memcpy(
+    (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa) + nome,
+    (int*)(*pbuffer+idadeT),
+    idade);
+
+memcpy(
+    (char *)(*pbuffer + pessoa) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa) + nome + idade,
+    (char *)(*pbuffer + email),
+    email);
+
+(*(int *)(*pbuffer + contadorPessoas))++;
+
+printf("deu\n");
+}*/
