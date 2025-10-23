@@ -32,15 +32,13 @@ int main()
     *(int *)(pbuffer + contadorPessoas) = 0;
     *(int *)(pbuffer + escolhaMenu) = 0;
 
-    int *escolha = (int *)(pbuffer + escolhaMenu);
-
     do
     {
 
         exibirMenu();
-        scanf("%d", escolha);
+        scanf("%d", (int *)(pbuffer + escolhaMenu));
 
-        switch (*escolha)
+        switch (*(int *)(pbuffer + escolhaMenu))
         {
         case 1:
             adicionarPessoa(&pbuffer);
@@ -62,7 +60,7 @@ int main()
             break;
         }
 
-    } while (*escolha != 5);
+    } while ((*(int *)(pbuffer + escolhaMenu)) != 5);
 
     free(pbuffer);
     return 0;
@@ -95,18 +93,15 @@ void adicionarPessoa(void **pbuffer)
 
     printf("digita o nome but:\n");
     scanf(" %[^\n]", destino);
-    while (getchar() != '\n')
-        ;
+    while (getchar() != '\n');
 
     printf("digita a idade but:\n");
     scanf("%d", (int *)(destino + nome));
-    while (getchar() != '\n')
-        ;
+    while (getchar() != '\n');
 
     printf("digita o email but:\n");
     scanf(" %[^\n]", destino + nome + idade);
-    while (getchar() != '\n')
-        ;
+    while (getchar() != '\n');
 
     (*(int *)(*pbuffer + contadorPessoas))++;
 
