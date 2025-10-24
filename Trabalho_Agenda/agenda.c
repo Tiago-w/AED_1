@@ -25,13 +25,13 @@ int main()
     void *pbuffer = malloc(temp);
     if (!pbuffer)
     {
-        printf("erro de memoria\n");
+        printf("Erro de memoria!\n");
         return 1;
     }
 
     *(int *)(pbuffer + contadorPessoas) = 0;
     *(int *)(pbuffer + escolhaMenu) = 0;
-
+    
     do
     {
 
@@ -53,10 +53,10 @@ int main()
             listarPessoas(pbuffer);
             break;
         case 5:
-            printf("saindo but\n");
+            printf("Saindo da agenda...\n");
             break;
         default:
-            printf("opcao invalida\n");
+            printf("Opcao invalida\n");
             break;
         }
 
@@ -68,13 +68,21 @@ int main()
 
 void exibirMenu()
 {
-
-    printf("\n Agenda em Buffer \n");
-    printf("1- Adicionar Pessoa\n");
-    printf("2- Remover Pessoa\n");
-    printf("3- Buscar Pessoa\n");
-    printf("4- Listar todos\n");
-    printf("5- Sair\n");
+    printf("\033[1;36m\n");
+    printf("==========================================\n");
+    printf("\033[1;33m"); 
+    printf("         AGENDA EM BUFFER\n");
+    printf("\033[1;36m"); 
+    printf("==========================================\n");
+    printf("\033[0m\n"); 
+    
+    printf("\033[1;32m1\033[0m - Adicionar Pessoa\n");
+    printf("\033[1;32m2\033[0m - Remover Pessoa\n");
+    printf("\033[1;32m3\033[0m - Buscar Pessoa\n");
+    printf("\033[1;32m4\033[0m - Listar todos\n");
+    printf("\033[1;31m5\033[0m - Sair\n\n");
+    
+    printf("\033[1;33mDigite sua escolha: \033[0m");
 }
 void adicionarPessoa(void **pbuffer)
 {
@@ -83,7 +91,7 @@ void adicionarPessoa(void **pbuffer)
 
     if (!tempbuffer)
     {
-        printf("erro de memoria\n");
+        printf("Erro de memoria!\n");
         return;
     }
 
@@ -91,17 +99,17 @@ void adicionarPessoa(void **pbuffer)
 
     char *destino = (char *)(*pbuffer + temp) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa);
 
-    printf("digita o nome but:\n");
+    printf("\n\nDigite o nome para adicionar: ");
     scanf(" %[^\n]", destino);
     while (getchar() != '\n')
         ;
 
-    printf("digita a idade but:\n");
+    printf("Digite a idade: ");
     scanf("%d", (int *)(destino + nome));
     while (getchar() != '\n')
         ;
 
-    printf("digita o email but:\n");
+    printf("Digite o email: ");
     scanf(" %[^\n]", destino + nome + idade);
     while (getchar() != '\n')
         ;
@@ -114,14 +122,14 @@ void adicionarPessoa(void **pbuffer)
         char *nomeAtual = (char *)(*pbuffer + temp) + (*contadorFor * gavetaPessoa);
         if (strcmp(nomeAtual + nome + idade, destino + nome + idade) == 0 && *contadorP > 0)
         {
-            printf("Essa pessoa já esta cadastrada de acordo com o email.\n");
+            printf("\nEssa pessoa ja esta cadastrada de acordo com o email fornecido.\n");
             return;
         }
     }
 
     (*(int *)(*pbuffer + contadorPessoas))++;
 
-    printf("deu but\n");
+    printf("\nAicionado!\n");
 }
 void listarPessoas(void *pbuffer)
 {
@@ -129,7 +137,7 @@ void listarPessoas(void *pbuffer)
 
     if (*cp == 0)
     {
-        printf("ngm aqui but\n");
+        printf("\nNao existe registros na agenda.\n");
         return;
     }
     int *i = (int *)(pbuffer + contadorLaço);
@@ -139,10 +147,10 @@ void listarPessoas(void *pbuffer)
 
         char *registroatual = (char *)(pbuffer + temp) + (*i * gavetaPessoa);
 
-        printf("\n%d\n", *i + 1);
-        printf("nome: %s\n", registroatual);
-        printf("idade: %d\n", *(int *)(registroatual + nome));
-        printf("email: %s\n", registroatual + nome + idade);
+        printf("\nCadastro %d:\n\n", *i + 1);
+        printf("Nome: %s\n", registroatual);
+        printf("Idade: %d\n", *(int *)(registroatual + nome));
+        printf("Email: %s\n", registroatual + nome + idade);
     }
 }
 
@@ -154,7 +162,7 @@ void buscarPessoa(void *pbuffer)
 
     char *emailT = (char *)(pbuffer + pessoa);
 
-    printf("Digite o email para buscar uma pessoa: \n");
+    printf("\nDigite o email para buscar uma pessoa: \n");
     scanf(" %[^\n]", emailT);
     while (getchar() != '\n')
         ;
@@ -166,12 +174,12 @@ void buscarPessoa(void *pbuffer)
 
         if (strcmp(registroAtual + nome + idade, emailT) == 0)
         {
-            printf("cadastro encontrado\nnome no sistema: ");
+            printf("\nCadastro encontrado\nNome cadastrado no sistema: ");
             printf("%s\n", registroAtual);
             return;
         }
     }
-    printf("\ncadastro nao encontrado\n");
+    printf("\nCadastro nao encontrado.\n");
 
     return;
 }
@@ -186,7 +194,7 @@ void removerPessoa(void **pbuffer)
     char *emailT = (char *)(*pbuffer + pessoa);
     int *contT = (int *)(*pbuffer + escolhaMenu);
 
-    printf("Digite o email para remover uma pessoa do registro: \n");
+    printf("\nDigite o email para remover uma pessoa do registro: \n");
     scanf(" %[^\n]", emailT);
     while (getchar() != '\n')
         ;
@@ -200,10 +208,13 @@ void removerPessoa(void **pbuffer)
             {
                 char *regAtual = (char *)(*pbuffer + temp) + ((*contT) * gavetaPessoa);
                 memcpy(regAtual, regAtual + gavetaPessoa, gavetaPessoa);
+                
             }
+            printf("\nRegistro removido pelo email!\n");
             (*cp)--;
+            return;
         }
     }
-    printf("Registro removido pelo email!\n");
+    printf("\nNenhum registro encontrado para remover.\n");
     return;
 }
