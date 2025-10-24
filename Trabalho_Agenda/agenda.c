@@ -17,6 +17,7 @@ void exibirMenu(void);
 void adicionarPessoa(void **pbuffer);
 void listarPessoas(void *pbuffer);
 void buscarPessoa(void *pbuffer);
+void removerPessoa(void **pbuffer);
 
 int main()
 {
@@ -43,7 +44,7 @@ int main()
             adicionarPessoa(&pbuffer);
             break;
         case 2:
-            // removerPessoa();
+            removerPessoa(&pbuffer);
             break;
         case 3:
             buscarPessoa(pbuffer);
@@ -104,19 +105,19 @@ void adicionarPessoa(void **pbuffer)
     scanf(" %[^\n]", destino + nome + idade);
     while (getchar() != '\n')
         ;
+
     int *contadorP = (int *)(*pbuffer + contadorPessoas);
     int *contadorFor = (int *)(*pbuffer + contadorLaço);
-  
-        for (*contadorFor = 0; *contadorFor < *contadorP; (*contadorFor)++)
+
+    for (*contadorFor = 0; *contadorFor < *contadorP; (*contadorFor)++)
+    {
+        char *nomeAtual = (char *)(*pbuffer + temp) + (*contadorFor * gavetaPessoa);
+        if (strcmp(nomeAtual + nome + idade, destino + nome + idade) == 0 && *contadorP > 0)
         {
-            char *nomeAtual = (char *)(*pbuffer + temp) + (*contadorFor * gavetaPessoa);
-            if (strcmp(nomeAtual + nome + idade, destino + nome + idade) == 0 && *contadorP>0)
-            {
-                printf("Essa pessoa já esta cadastrada de acordo com o email.\n");
-                return;
-            }
+            printf("Essa pessoa já esta cadastrada de acordo com o email.\n");
+            return;
         }
-    
+    }
 
     (*(int *)(*pbuffer + contadorPessoas))++;
 
@@ -172,5 +173,37 @@ void buscarPessoa(void *pbuffer)
     }
     printf("\ncadastro nao encontrado\n");
 
+    return;
+}
+
+void removerPessoa(void **pbuffer)
+{
+
+    int *cp = (int *)(*pbuffer + contadorPessoas);
+    int *c = (int *)(*pbuffer + contadorLaço);
+    *c = 0;
+
+    char *emailT = (char *)(*pbuffer + pessoa);
+    int *contT = (int *)(*pbuffer + escolhaMenu);
+
+    printf("Digite o email para remover uma pessoa do registro: \n");
+    scanf(" %[^\n]", emailT);
+    while (getchar() != '\n')
+        ;
+
+    for (*c = 0; *c < *cp; (*c)++)
+    {
+        char *registroAtual = (char *)(*pbuffer + temp) + ((*c) * gavetaPessoa);
+        if (strcmp(registroAtual + nome + idade, emailT) == 0)
+        {
+            for (*contT = *c; *contT < *cp - 1; (*contT)++)
+            {
+                char *regAtual = (char *)(*pbuffer + temp) + ((*contT) * gavetaPessoa);
+                memcpy(regAtual, regAtual + gavetaPessoa, gavetaPessoa);
+            }
+            (*cp)--;
+        }
+    }
+    printf("Registro removido pelo email!\n");
     return;
 }
