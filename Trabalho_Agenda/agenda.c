@@ -53,7 +53,7 @@ int main()
             listarPessoas(pbuffer);
             break;
         case 5:
-            printf("Saindo da agenda...\n");
+            printf("Saindo da agenda.\n");
             break;
         default:
             printf("Opcao invalida\n");
