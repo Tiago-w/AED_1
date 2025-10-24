@@ -10,8 +10,8 @@
 #define contadorPessoas 0
 #define escolhaMenu (contadorPessoas + sizeof(int))
 #define contadorLaço (escolhaMenu + sizeof(int))
-#define pessoa (contadorLaço + sizeof(int))
-#define temp (pessoa + (sizeof(char) * 50))
+#define temp (contadorLaço + sizeof(int))
+#define inicioPessoas (temp + (sizeof(char) * 50))
 
 void exibirMenu(void);
 void adicionarPessoa(void **pbuffer);
@@ -22,7 +22,7 @@ void removerPessoa(void **pbuffer);
 int main()
 {
 
-    void *pbuffer = malloc(temp);
+    void *pbuffer = malloc(inicioPessoas);
     if (!pbuffer)
     {
         printf("Erro de memoria!\n");
@@ -75,7 +75,6 @@ void exibirMenu()
     printf("\033[1;36m"); 
     printf("==========================================\n");
     printf("\033[0m\n"); 
-    
     printf("\033[1;32m1\033[0m - Adicionar Pessoa\n");
     printf("\033[1;32m2\033[0m - Remover Pessoa\n");
     printf("\033[1;32m3\033[0m - Buscar Pessoa\n");
@@ -87,7 +86,7 @@ void exibirMenu()
 void adicionarPessoa(void **pbuffer)
 {
 
-    void *tempbuffer = realloc(*pbuffer, temp + (*(int *)(*pbuffer + contadorPessoas) + 1) * (gavetaPessoa));
+    void *tempbuffer = realloc(*pbuffer, inicioPessoas + (*(int *)(*pbuffer + contadorPessoas) + 1) * (gavetaPessoa));
 
     if (!tempbuffer)
     {
@@ -97,7 +96,7 @@ void adicionarPessoa(void **pbuffer)
 
     *pbuffer = tempbuffer;
 
-    char *destino = (char *)(*pbuffer + temp) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa);
+    char *destino = (char *)(*pbuffer + inicioPessoas) + (*(int *)(*pbuffer + contadorPessoas) * gavetaPessoa);
 
     printf("\n\nDigite o nome para adicionar: ");
     scanf(" %[^\n]", destino);
@@ -119,7 +118,7 @@ void adicionarPessoa(void **pbuffer)
 
     for (*contadorFor = 0; *contadorFor < *contadorP; (*contadorFor)++)
     {
-        char *nomeAtual = (char *)(*pbuffer + temp) + (*contadorFor * gavetaPessoa);
+        char *nomeAtual = (char *)(*pbuffer + inicioPessoas) + (*contadorFor * gavetaPessoa);
         if (strcmp(nomeAtual + nome + idade, destino + nome + idade) == 0 && *contadorP > 0)
         {
             printf("\nEssa pessoa ja esta cadastrada de acordo com o email fornecido.\n");
@@ -145,7 +144,7 @@ void listarPessoas(void *pbuffer)
     for (*i = 0; *i < *cp; (*i)++)
     {
 
-        char *registroatual = (char *)(pbuffer + temp) + (*i * gavetaPessoa);
+        char *registroatual = (char *)(pbuffer + inicioPessoas) + (*i * gavetaPessoa);
 
         printf("\nCadastro %d:\n\n", *i + 1);
         printf("Nome: %s\n", registroatual);
@@ -160,7 +159,7 @@ void buscarPessoa(void *pbuffer)
     int *c = (int *)(pbuffer + contadorLaço);
     *c = 0;
 
-    char *emailT = (char *)(pbuffer + pessoa);
+    char *emailT = (char *)(pbuffer + temp);
 
     printf("\nDigite o email para buscar uma pessoa: \n");
     scanf(" %[^\n]", emailT);
@@ -170,7 +169,7 @@ void buscarPessoa(void *pbuffer)
     for (*c = 0; *c < *cp; (*c)++)
     {
 
-        char *registroAtual = (char *)(pbuffer + temp) + ((*c) * gavetaPessoa);
+        char *registroAtual = (char *)(pbuffer + inicioPessoas) + ((*c) * gavetaPessoa);
 
         if (strcmp(registroAtual + nome + idade, emailT) == 0)
         {
@@ -191,7 +190,7 @@ void removerPessoa(void **pbuffer)
     int *c = (int *)(*pbuffer + contadorLaço);
     *c = 0;
 
-    char *emailT = (char *)(*pbuffer + pessoa);
+    char *emailT = (char *)(*pbuffer + temp);
     int *contT = (int *)(*pbuffer + escolhaMenu);
 
     printf("\nDigite o email para remover uma pessoa do registro: \n");
@@ -201,12 +200,12 @@ void removerPessoa(void **pbuffer)
 
     for (*c = 0; *c < *cp; (*c)++)
     {
-        char *registroAtual = (char *)(*pbuffer + temp) + ((*c) * gavetaPessoa);
+        char *registroAtual = (char *)(*pbuffer + inicioPessoas) + ((*c) * gavetaPessoa);
         if (strcmp(registroAtual + nome + idade, emailT) == 0)
         {
             for (*contT = *c; *contT < *cp - 1; (*contT)++)
             {
-                char *regAtual = (char *)(*pbuffer + temp) + ((*contT) * gavetaPessoa);
+                char *regAtual = (char *)(*pbuffer + inicioPessoas) + ((*contT) * gavetaPessoa);
                 memcpy(regAtual, regAtual + gavetaPessoa, gavetaPessoa);
                 
             }
