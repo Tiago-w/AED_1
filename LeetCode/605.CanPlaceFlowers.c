@@ -39,6 +39,8 @@ bool canPlaceFlowers(int *flowerbed, int flowerbedSize, int n)
         }
     }
 
+
+
     for (int i = 1; i < flowerbedSize - 1; i++)
     {
         if (flowerbed[i - 1] == 0 && flowerbed[i] == 0 && flowerbed[i + 1] == 0)
@@ -51,6 +53,9 @@ bool canPlaceFlowers(int *flowerbed, int flowerbedSize, int n)
             }
         }
     }
+
+
+    
     
     if (flowerbedSize >= 2 && flowerbed[flowerbedSize - 1] == 0 && flowerbed[flowerbedSize - 2] == 0)
     {
