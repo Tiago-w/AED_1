@@ -12,7 +12,6 @@ int main()
     bool result;
 
     result = canPlaceFlowers(flowerbed, flowerbedSize, n);
-
     printf("%d", result);
 
     return 0;
@@ -20,42 +19,43 @@ int main()
 
 bool canPlaceFlowers(int *flowerbed, int flowerbedSize, int n)
 {
-    if (n == 0) {
+    if (n == 0)
+    {
         return true;
     }
-    
-    int count = 0; 
-    
+
+    int count = 0;
+
+
     if (flowerbedSize >= 1 && flowerbed[0] == 0)
     {
         if (flowerbedSize == 1 || flowerbed[1] == 0)
         {
             flowerbed[0] = 1;
             count++;
-            
-            if (count >= n) {
+
+            if (count >= n)
+            {
                 return true;
             }
         }
     }
-
 
 
     for (int i = 1; i < flowerbedSize - 1; i++)
     {
         if (flowerbed[i - 1] == 0 && flowerbed[i] == 0 && flowerbed[i + 1] == 0)
         {
-            flowerbed[i] = 1; 
+            flowerbed[i] = 1;
             count++;
-            
-            if (count >= n) {
+
+            if (count >= n)
+            {
                 return true;
             }
         }
     }
 
-
-    
     
     if (flowerbedSize >= 2 && flowerbed[flowerbedSize - 1] == 0 && flowerbed[flowerbedSize - 2] == 0)
     {
