@@ -29,7 +29,7 @@ int main()
         return 1;
     }
 
-    *(int *)(pbuffer + contadorPessoas) = 0; // soma os endereços de memória
+    *(int *)(pbuffer + contadorPessoas) = 0; // oma os endereços de memória
     *(int *)(pbuffer + escolhaMenu) = 0;     // faz o cast pra (int*) e trata o endereço calculado como um inteiro
                                              // o * na frente faz escrever o valor
     do
