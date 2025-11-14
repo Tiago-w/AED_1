@@ -19,16 +19,16 @@ void removerPessoa(void **pbuffer);
 int main()
 {
 
-    void *pbuffer = malloc(inicioPessoas); // endereço de pbuffer que aponta pra qualquer tipo
+    void *pbuffer = malloc(inicioPessoas);
     if (!pbuffer)
     {
         printf("Erro de memoria!\n");
         return 1;
     }
 
-    *(int *)(pbuffer + contadorPessoas) = 0; // soma os endereços de memória
-    *(int *)(pbuffer + escolhaMenu) = 0;     // faz o cast pra (int*) e trata o endereço calculado como um inteiro
-                                             // o * na frente faz escrever o valor
+    *(int *)(pbuffer + contadorPessoas) = 0;
+    *(int *)(pbuffer + escolhaMenu) = 0;
+
     do
     {
 
@@ -50,7 +50,7 @@ int main()
             listarPessoas(pbuffer);
             break;
         case 5:
-            printf("Saindo da agenda.\n");
+            printf("\nSaindo da agenda.\n");
             break;
         default:
             printf("Opcao invalida\n");
@@ -61,39 +61,45 @@ int main()
     free(pbuffer);
     return 0;
 }
-
 void exibirMenu()
 {
-    printf("\033[1;36m\n");
-    printf("==========================================\n");
-    printf("\033[1;33m");
-    printf("         AGENDA EM BUFFER\n");
-    printf("\033[1;36m");
-    printf("==========================================\n");
-    printf("\033[0m\n");
-    printf("\033[1;32m1\033[0m - Adicionar Pessoa\n");
-    printf("\033[1;32m2\033[0m - Remover Pessoa\n");
-    printf("\033[1;32m3\033[0m - Buscar Pessoa\n");
-    printf("\033[1;32m4\033[0m - Listar todos\n");
-    printf("\033[1;31m5\033[0m - Sair\n\n");
-    printf("\033[1;33m\033[5mDigite sua escolha: \033[0m");
+    printf("\n");
+
+    printf("\033[0m===========================================\033[0m\n");
+    printf("\033[0m|\033[0m             \033[36mAgenda em buffer\033[0m            \033[0m|\033[0m\n");
+    printf("\033[0m|\033[0m                                         \033[0m|\033[0m\n");
+
+    printf("\033[0m|\033[0m   \033[1;32m1\033[0m- Adicionar pessoa                   \033[0m|\033[0m\n");
+    printf("\033[0m|\033[0m   \033[1;32m2\033[0m- Remover uma pessoa                 \033[0m|\033[0m\n");
+    printf("\033[0m|\033[0m   \033[1;32m3\033[0m- Buscar uma pessoa                  \033[0m|\033[0m\n");
+    printf("\033[0m|\033[0m   \033[1;32m4\033[0m- Listar todas as pessoas            \033[0m|\033[0m\n");
+    printf("\033[0m|\033[0m   \033[1;31m5\033[0m- Sair da agenda                     \033[0m|\033[0m\n");
+
+    printf("\033[0m|\033[0m                                         \033[0m|\033[0m\n");
+    printf("\033[0m===========================================\033[0m\n");
+
+    printf("\033[5;37mDigite sua escolha:\033[0m ");
 }
 
 void adicionarPessoa(void **pbuffer)
 {
-    while (getchar() != '\n');
+    while (getchar() != '\n')
+        ;
 
     printf("\n\nDigite o nome: ");
     scanf(" %[^\n]", (char *)(*pbuffer + nometemp));
-    while (getchar() != '\n');
+    while (getchar() != '\n')
+        ;
 
     printf("Digite a idade: ");
     scanf("%d", (int *)(*pbuffer + idadetemp));
-    while (getchar() != '\n');
+    while (getchar() != '\n')
+        ;
 
     printf("Digite o email: ");
     scanf(" %[^\n]", (char *)(*pbuffer + emailtemp));
-    while (getchar() != '\n');
+    while (getchar() != '\n')
+        ;
 
     char *destino = (char *)(*pbuffer + inicioPessoas);
     *(int *)(*pbuffer + contadorLaço) = 0;
@@ -108,7 +114,7 @@ void adicionarPessoa(void **pbuffer)
         (*(int *)(*pbuffer + contadorLaço))++;
     }
 
-    *(int*)(*pbuffer + escolhaMenu) = destino - (char *)(*pbuffer);
+    *(int *)(*pbuffer + escolhaMenu) = destino - (char *)(*pbuffer);
 
     void *novoPbuffer = realloc(*pbuffer,
                                 ((char *)destino - (char *)(*pbuffer)) +
@@ -124,7 +130,7 @@ void adicionarPessoa(void **pbuffer)
 
     *pbuffer = novoPbuffer;
 
-    destino = (char *)(*pbuffer) + *(int*)(*pbuffer + escolhaMenu);
+    destino = (char *)(*pbuffer) + *(int *)(*pbuffer + escolhaMenu);
 
     strcpy(destino, (char *)(*pbuffer + nometemp));
 
@@ -229,7 +235,7 @@ void removerPessoa(void **pbuffer)
         {
             char *proxima = email + strlen(email) + 1;
 
-            *(int *)(*pbuffer + escolhaMenu) = 0; 
+            *(int *)(*pbuffer + escolhaMenu) = 0;
             char *fim = proxima;
 
             while (*(int *)(*pbuffer + escolhaMenu) < (*(int *)(*pbuffer + contadorPessoas) - 1))
