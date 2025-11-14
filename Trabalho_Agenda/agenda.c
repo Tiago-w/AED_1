@@ -78,38 +78,22 @@ void exibirMenu()
     printf("\033[1;31m5\033[0m - Sair\n\n");
     printf("\033[1;33m\033[5mDigite sua escolha: \033[0m");
 }
+
 void adicionarPessoa(void **pbuffer)
 {
-    while (getchar() != '\n')
-        ;
+    while (getchar() != '\n');
 
     printf("\n\nDigite o nome: ");
-    scanf("%[^\n]", (char *)(*pbuffer + nometemp));
-    while (getchar() != '\n')
-        ;
+    scanf(" %[^\n]", (char *)(*pbuffer + nometemp));
+    while (getchar() != '\n');
 
     printf("Digite a idade: ");
     scanf("%d", (int *)(*pbuffer + idadetemp));
-    while (getchar() != '\n')
-        ;
+    while (getchar() != '\n');
 
     printf("Digite o email: ");
-    scanf("%[^\n]", (char *)(*pbuffer + emailtemp));
-    while (getchar() != '\n')
-        ;
-
-    void *novoPbuffer = realloc(*pbuffer,
-                                inicioPessoas +
-                                    strlen((char *)(*pbuffer + nometemp)) + 1 +
-                                    sizeof(int) +
-                                    strlen((char *)(*pbuffer + emailtemp)) + 1);
-    if (!novoPbuffer)
-    {
-        printf("\n\n--ERRO DE MEMÓRIA--\n\n");
-        return;
-    }
-
-    *pbuffer = novoPbuffer;
+    scanf(" %[^\n]", (char *)(*pbuffer + emailtemp));
+    while (getchar() != '\n');
 
     char *destino = (char *)(*pbuffer + inicioPessoas);
     *(int *)(*pbuffer + contadorLaço) = 0;
@@ -123,6 +107,24 @@ void adicionarPessoa(void **pbuffer)
 
         (*(int *)(*pbuffer + contadorLaço))++;
     }
+
+    *(int*)(*pbuffer + escolhaMenu) = destino - (char *)(*pbuffer);
+
+    void *novoPbuffer = realloc(*pbuffer,
+                                ((char *)destino - (char *)(*pbuffer)) +
+                                    strlen((char *)(*pbuffer + nometemp)) + 1 +
+                                    sizeof(int) +
+                                    strlen((char *)(*pbuffer + emailtemp)) + 1);
+
+    if (!novoPbuffer)
+    {
+        printf("\n\n--ERRO DE MEMÓRIA--\n\n");
+        return;
+    }
+
+    *pbuffer = novoPbuffer;
+
+    destino = (char *)(*pbuffer) + *(int*)(*pbuffer + escolhaMenu);
 
     strcpy(destino, (char *)(*pbuffer + nometemp));
 
@@ -169,7 +171,8 @@ void buscarPessoa(void *pbuffer)
         return;
     }
 
-    while (getchar() != '\n');
+    while (getchar() != '\n')
+        ;
     printf("\nDigite o email para buscar: ");
     scanf(" %[^\n]", (char *)(pbuffer + emailtemp));
     while (getchar() != '\n')
@@ -199,6 +202,62 @@ void buscarPessoa(void *pbuffer)
 
     printf("\nPessoa nao encontrada!\n");
 }
-void removerPessoa(void **pbuffer){
-    
+void removerPessoa(void **pbuffer)
+{
+    if (*(int *)(*pbuffer + contadorPessoas) == 0)
+    {
+        printf("\nNenhuma pessoa na agenda para remover!\n");
+        return;
+    }
+
+    while (getchar() != '\n')
+        ;
+    printf("\nDigite o email para remover: ");
+    scanf(" %[^\n]", (char *)(*pbuffer + emailtemp));
+    while (getchar() != '\n')
+        ;
+
+    *(int *)(*pbuffer + contadorLaço) = 0;
+
+    char *pessoa = (char *)(*pbuffer + inicioPessoas);
+
+    while (*(int *)(*pbuffer + contadorLaço) < *(int *)(*pbuffer + contadorPessoas))
+    {
+        char *email = pessoa + strlen(pessoa) + 1 + sizeof(int);
+
+        if (strcmp(email, (char *)(*pbuffer + emailtemp)) == 0)
+        {
+            char *proxima = email + strlen(email) + 1;
+
+            *(int *)(*pbuffer + escolhaMenu) = 0; 
+            char *fim = proxima;
+
+            while (*(int *)(*pbuffer + escolhaMenu) < (*(int *)(*pbuffer + contadorPessoas) - 1))
+            {
+                fim = fim +
+                      strlen(fim) + 1 +
+                      sizeof(int) +
+                      strlen(fim + strlen(fim) + 1 + sizeof(int)) + 1;
+
+                (*(int *)(*pbuffer + escolhaMenu))++;
+            }
+
+            memmove(pessoa, proxima, fim - proxima);
+
+            (*(int *)(*pbuffer + contadorPessoas))--;
+
+            printf("\nPessoa removida!\n");
+            return;
+        }
+
+        pessoa =
+            pessoa +
+            strlen(pessoa) + 1 +
+            sizeof(int) +
+            strlen(email) + 1;
+
+        (*(int *)(*pbuffer + contadorLaço))++;
+    }
+
+    printf("\nPessoa nao encontrada!\n");
 }
