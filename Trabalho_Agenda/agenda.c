@@ -87,7 +87,7 @@ void adicionarPessoa(void **pbuffer)
         ;
 
     printf("\n\nDigite o nome: ");
-    scanf(" %[^\n]", (char *)(*pbuffer + nometemp));
+    scanf(" %29[^\n]", (char *)(*pbuffer + nometemp));
     while (getchar() != '\n')
         ;
 
@@ -97,7 +97,7 @@ void adicionarPessoa(void **pbuffer)
         ;
 
     printf("Digite o email: ");
-    scanf(" %[^\n]", (char *)(*pbuffer + emailtemp));
+    scanf(" %29[^\n]", (char *)(*pbuffer + emailtemp));
     while (getchar() != '\n')
         ;
 
@@ -180,7 +180,7 @@ void buscarPessoa(void *pbuffer)
     while (getchar() != '\n')
         ;
     printf("\nDigite o email para buscar: ");
-    scanf(" %[^\n]", (char *)(pbuffer + emailtemp));
+    scanf(" %29[^\n]", (char *)(pbuffer + emailtemp));
     while (getchar() != '\n')
         ;
 
@@ -216,12 +216,10 @@ void removerPessoa(void **pbuffer)
         return;
     }
 
-    while (getchar() != '\n')
-        ;
+    while (getchar() != '\n');
     printf("\nDigite o email para remover: ");
-    scanf(" %[^\n]", (char *)(*pbuffer + emailtemp));
-    while (getchar() != '\n')
-        ;
+    scanf(" %29[^\n]", (char *)(*pbuffer + emailtemp));
+    while (getchar() != '\n');
 
     *(int *)(*pbuffer + contadorLaço) = 0;
 
@@ -229,41 +227,36 @@ void removerPessoa(void **pbuffer)
 
     while (*(int *)(*pbuffer + contadorLaço) < *(int *)(*pbuffer + contadorPessoas))
     {
-        char *email = pessoa + strlen(pessoa) + 1 + sizeof(int);
+        char *idade_ptr = pessoa + strlen(pessoa) + 1;
+        char *email = idade_ptr + sizeof(int);
 
         if (strcmp(email, (char *)(*pbuffer + emailtemp)) == 0)
         {
             char *proxima = email + strlen(email) + 1;
 
-            *(int *)(*pbuffer + escolhaMenu) = 0;
-            char *fim = proxima;
+            char *fim = (char *)(*pbuffer + inicioPessoas);
 
-            while (*(int *)(*pbuffer + escolhaMenu) < (*(int *)(*pbuffer + contadorPessoas) - 1))
+            *(int *)(*pbuffer + escolhaMenu) = 0;
+
+            while (*(int *)(*pbuffer + escolhaMenu) < *(int *)(*pbuffer + contadorPessoas))
             {
-                fim = fim +
-                      strlen(fim) + 1 +
-                      sizeof(int) +
-                      strlen(fim + strlen(fim) + 1 + sizeof(int)) + 1;
+                char *temp_idade = fim + strlen(fim) + 1;
+                char *temp_email = temp_idade + sizeof(int);
+                fim = temp_email + strlen(temp_email) + 1;
 
                 (*(int *)(*pbuffer + escolhaMenu))++;
             }
 
             memmove(pessoa, proxima, fim - proxima);
-
             (*(int *)(*pbuffer + contadorPessoas))--;
 
             printf("\nPessoa removida!\n");
             return;
         }
 
-        pessoa =
-            pessoa +
-            strlen(pessoa) + 1 +
-            sizeof(int) +
-            strlen(email) + 1;
-
+        pessoa = email + strlen(email) + 1;
+        
         (*(int *)(*pbuffer + contadorLaço))++;
     }
-
     printf("\nPessoa nao encontrada!\n");
 }
