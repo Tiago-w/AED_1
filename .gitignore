@@ -19,3 +19,6 @@ bin/
 # Arquivos temporários do sistema operacional
 .DS_Store
 Thumbs.db
+
+# Arquivos específicos ignorados
+agenda_antiga.c
