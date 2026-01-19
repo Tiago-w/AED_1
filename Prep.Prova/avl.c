@@ -1,23 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef long TipoValor;
-
-typedef struct Registro {
-	TipoValor numeroNo;
-} Registro;
-
 typedef struct No {
-	Registro   reg;
+	long	   valor;
 	struct No* pEsq;
 	struct No* pDir;
-} No;
-
-typedef No*		  Apontador;
-typedef Apontador TipoDicionario;
-typedef No		  TNo;
-
-// função de altura e fb
+} TNo;
 
 int Altura( TNo* pRaiz ) {
 	int iEsq, iDir;
@@ -40,8 +28,6 @@ int FB( TNo* pRaiz ) {
 	return Altura( pRaiz->pEsq ) - Altura( pRaiz->pDir );
 }
 
-// rotação simples
-
 void RSE( TNo** ppRaiz ) {
 	TNo* pAux;
 	pAux			  = ( *ppRaiz )->pDir;
@@ -50,15 +36,14 @@ void RSE( TNo** ppRaiz ) {
 	( *ppRaiz )		  = pAux;
 }
 
-void RSD( TNo** ppRaiz ) {
+void RSD( TNo** ppRaiz ) { // 15
 	TNo* pAux;
-	pAux			  = ( *ppRaiz )->pEsq;
-	( *ppRaiz )->pEsq = pAux->pDir;
-	pAux->pDir		  = ( *ppRaiz );
-	( *ppRaiz )		  = pAux;
+	pAux			  = ( *ppRaiz )->pEsq; // aux recebe 10
+	( *ppRaiz )->pEsq = pAux->pDir;		   // filho esq de 15 recebe direita de 10 = null
+	pAux->pDir		  = ( *ppRaiz );	   // direta do 10 recebe 15
+	( *ppRaiz )		  = pAux;			   // raiz recebe nó 10
 }
 
-// balanceamento
 int BalancaEsquerda( TNo** ppRaiz ) {
 	int fbe = FB( ( *ppRaiz )->pEsq );
 	if( fbe > 0 ) {
@@ -95,23 +80,22 @@ int Balanceamento( TNo** ppRaiz ) {
 		return 0;
 }
 
-// inserir
-int Insere( TNo** ppRaiz, Registro* x ) {
+int Insere( TNo** ppRaiz, long valor ) {
 	if( *ppRaiz == NULL ) {
-		*ppRaiz			  = ( TNo* )malloc( sizeof( TNo ) );
-		( *ppRaiz )->reg  = *x; 
-		( *ppRaiz )->pEsq = NULL;
-		( *ppRaiz )->pDir = NULL;
+		*ppRaiz			   = ( TNo* )malloc( sizeof( TNo ) );
+		( *ppRaiz )->valor = valor;
+		( *ppRaiz )->pEsq  = NULL;
+		( *ppRaiz )->pDir  = NULL;
 		return 1;
-	} else if( ( *ppRaiz )->reg.numeroNo > x->numeroNo ) { 
-		if( Insere( &( *ppRaiz )->pEsq, x ) ) {
+	} else if( ( *ppRaiz )->valor > valor ) {
+		if( Insere( &( ( *ppRaiz )->pEsq ), valor ) ) {
 			if( Balanceamento( ppRaiz ) )
 				return 0;
 			else
 				return 1;
 		}
-	} else if( ( *ppRaiz )->reg.numeroNo < x->numeroNo ) { 
-		if( Insere( &( *ppRaiz )->pDir, x ) ) {
+	} else if( ( *ppRaiz )->valor < valor ) {
+		if( Insere( &( ( *ppRaiz )->pDir ), valor ) ) {
 			if( Balanceamento( ppRaiz ) )
 				return 0;
 			else
@@ -119,10 +103,9 @@ int Insere( TNo** ppRaiz, Registro* x ) {
 		} else
 			return 0;
 	} else
-		return 0; // valor já presente
+		return 0;
 }
 
-// ver se é avl
 int EhArvoreAvl( TNo* pRaiz ) {
 	int fb;
 	if( pRaiz == NULL )
@@ -138,29 +121,28 @@ int EhArvoreAvl( TNo* pRaiz ) {
 		return 1;
 }
 
-// auxiliar
 void EmOrdem( TNo* pRaiz ) {
 	if( pRaiz != NULL ) {
 		EmOrdem( pRaiz->pEsq );
-		printf( "%ld ", pRaiz->reg.numeroNo ); 
+		printf( "%ld ", pRaiz->valor );
 		EmOrdem( pRaiz->pDir );
 	}
 }
 
-// main
 int main() {
-	TNo*	 raiz = NULL;
-	Registro reg;
+	TNo* raiz = NULL;
 
 	int valores[] = { 10, 20, 30, 40, 50, 25 };
 	int n		  = 6;
 
 	for( int i = 0; i < n; i++ ) {
 		printf( "%d ", valores[i] );
-		reg.numeroNo = valores[i]; 
-		Insere( &raiz, &reg );
+		Insere( &raiz, valores[i] );
 	}
+
+	printf( "\n" );
 	EmOrdem( raiz );
+	printf( "\n" );
 
 	if( EhArvoreAvl( raiz ) )
 		printf( "e avl\n" );
