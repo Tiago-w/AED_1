@@ -3,17 +3,17 @@
 
 typedef struct No {
 	long	   valor;
-	struct No* pEsq;
-	struct No* pDir;
-} TNo;
+	struct No* esq;
+	struct No* dir;
+} No;
 
-int Altura( TNo* pRaiz ) {
+int Altura( No* raiz ) {
 	int iEsq, iDir;
-	if( pRaiz == NULL ) {
+	if( raiz == NULL ) {
 		return 0;
 	}
-	iEsq = Altura( pRaiz->pEsq );
-	iDir = Altura( pRaiz->pDir );
+	iEsq = Altura( raiz->esq );
+	iDir = Altura( raiz->dir );
 	if( iEsq > iDir ) {
 		return iEsq + 1;
 	} else {
@@ -21,82 +21,82 @@ int Altura( TNo* pRaiz ) {
 	}
 }
 
-int FB( TNo* pRaiz ) {
-	if( pRaiz == NULL ) {
+int FB( No* raiz ) {
+	if( raiz == NULL ) {
 		return 0;
 	}
-	return Altura( pRaiz->pEsq ) - Altura( pRaiz->pDir );
+	return Altura( raiz->esq ) - Altura( raiz->dir );
 }
 
-void RSE( TNo** ppRaiz ) {
-	TNo* pAux;
-	pAux			  = ( *ppRaiz )->pDir;
-	( *ppRaiz )->pDir = pAux->pEsq;
-	pAux->pEsq		  = ( *ppRaiz );
-	( *ppRaiz )		  = pAux;
+void rotaçãoEsquerda( No** raiz ) {
+	No* aux;
+	aux			   = ( *raiz )->dir;
+	( *raiz )->dir = aux->esq;
+	aux->esq	   = ( *raiz );
+	( *raiz )	   = aux;
 }
 
-void RSD( TNo** ppRaiz ) { // 15
-	TNo* pAux;
-	pAux			  = ( *ppRaiz )->pEsq; // aux recebe 10
-	( *ppRaiz )->pEsq = pAux->pDir;		   // filho esq de 15 recebe direita de 10 = null
-	pAux->pDir		  = ( *ppRaiz );	   // direta do 10 recebe 15
-	( *ppRaiz )		  = pAux;			   // raiz recebe nó 10
+void rotaçãoDireita( No** raiz ) { // 15
+	No* aux;
+	aux			   = ( *raiz )->esq; // aux recebe 10
+	( *raiz )->esq = aux->dir;		 // filho esq de 15 recebe direita de 10 = null
+	aux->dir	   = ( *raiz );		 // direta do 10 recebe 15
+	( *raiz )	   = aux;			 // raiz recebe nó 10
 }
 
-int BalancaEsquerda( TNo** ppRaiz ) {
-	int fbe = FB( ( *ppRaiz )->pEsq );
+int balançaEsquerda( No** raiz ) {
+	int fbe = FB( ( *raiz )->esq );
 	if( fbe > 0 ) {
-		RSD( ppRaiz );
+		rotaçãoDireita( raiz );
 		return 1;
 	} else if( fbe < 0 ) {
-		RSE( &( ( *ppRaiz )->pEsq ) );
-		RSD( ppRaiz );
+		rotaçãoEsquerda( &( ( *raiz )->esq ) );
+		rotaçãoDireita( raiz );
 		return 1;
 	}
 	return 0;
 }
 
-int BalancaDireita( TNo** ppRaiz ) {
-	int fbd = FB( ( *ppRaiz )->pDir );
+int balançaDireita( No** raiz ) {
+	int fbd = FB( ( *raiz )->dir );
 	if( fbd < 0 ) {
-		RSE( ppRaiz );
+		rotaçãoEsquerda( raiz );
 		return 1;
 	} else if( fbd > 0 ) {
-		RSD( &( ( *ppRaiz )->pDir ) );
-		RSE( ppRaiz );
+		rotaçãoDireita( &( ( *raiz )->dir ) );
+		rotaçãoEsquerda( raiz );
 		return 1;
 	}
 	return 0;
 }
 
-int Balanceamento( TNo** ppRaiz ) {
-	int fb = FB( *ppRaiz );
+int balanceamento( No** raiz ) {
+	int fb = FB( *raiz );
 	if( fb > 1 )
-		return BalancaEsquerda( ppRaiz );
+		return balançaEsquerda( raiz );
 	else if( fb < -1 )
-		return BalancaDireita( ppRaiz );
+		return balançaDireita( raiz );
 	else
 		return 0;
 }
 
-int Insere( TNo** ppRaiz, long valor ) {
-	if( *ppRaiz == NULL ) {
-		*ppRaiz			   = ( TNo* )malloc( sizeof( TNo ) );
-		( *ppRaiz )->valor = valor;
-		( *ppRaiz )->pEsq  = NULL;
-		( *ppRaiz )->pDir  = NULL;
+int Insere( No** raiz, long valor ) {
+	if( *raiz == NULL ) {
+		*raiz			 = ( No* )malloc( sizeof( No ) );
+		( *raiz )->valor = valor;
+		( *raiz )->esq	 = NULL;
+		( *raiz )->dir	 = NULL;
 		return 1;
-	} else if( ( *ppRaiz )->valor > valor ) {
-		if( Insere( &( ( *ppRaiz )->pEsq ), valor ) ) {
-			if( Balanceamento( ppRaiz ) )
+	} else if( ( *raiz )->valor > valor ) {
+		if( Insere( &( ( *raiz )->esq ), valor ) ) {
+			if( balanceamento( raiz ) )
 				return 0;
 			else
 				return 1;
 		}
-	} else if( ( *ppRaiz )->valor < valor ) {
-		if( Insere( &( ( *ppRaiz )->pDir ), valor ) ) {
-			if( Balanceamento( ppRaiz ) )
+	} else if( ( *raiz )->valor < valor ) {
+		if( Insere( &( ( *raiz )->dir ), valor ) ) {
+			if( balanceamento( raiz ) )
 				return 0;
 			else
 				return 1;
@@ -106,34 +106,34 @@ int Insere( TNo** ppRaiz, long valor ) {
 		return 0;
 }
 
-int EhArvoreAvl( TNo* pRaiz ) {
+int EhArvoreAvl( No* raiz ) {
 	int fb;
-	if( pRaiz == NULL )
+	if( raiz == NULL )
 		return 1;
-	if( !EhArvoreAvl( pRaiz->pEsq ) )
+	if( !EhArvoreAvl( raiz->esq ) )
 		return 0;
-	if( !EhArvoreAvl( pRaiz->pDir ) )
+	if( !EhArvoreAvl( raiz->dir ) )
 		return 0;
-	fb = FB( pRaiz );
+	fb = FB( raiz );
 	if( ( fb > 1 ) || ( fb < -1 ) )
 		return 0;
 	else
 		return 1;
 }
 
-void EmOrdem( TNo* pRaiz ) {
-	if( pRaiz != NULL ) {
-		EmOrdem( pRaiz->pEsq );
-		printf( "%ld ", pRaiz->valor );
-		EmOrdem( pRaiz->pDir );
+void EmOrdem( No* raiz ) {
+	if( raiz != NULL ) {
+		EmOrdem( raiz->esq );
+		printf( "%ld ", raiz->valor );
+		EmOrdem( raiz->dir );
 	}
 }
 
 int main() {
-	TNo* raiz = NULL;
+	No* raiz = NULL;
 
-	int valores[] = { 10, 20, 30, 40, 50, 25 };
-	int n		  = 6;
+	int valores[] = { 10, 20, 15 };
+	int n		  = 3;
 
 	for( int i = 0; i < n; i++ ) {
 		printf( "%d ", valores[i] );
