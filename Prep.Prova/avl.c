@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+//avl
+
 typedef struct No {
 	long	   valor;
 	struct No* esq;

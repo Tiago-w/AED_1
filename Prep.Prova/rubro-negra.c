@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// rubro negra
+
 #define RED 1
 #define BLACK 0
 
@@ -202,8 +204,8 @@ static void liberaArvore( No* r ) {
 int main( void ) {
 	No* raiz = NULL;
 
-	int valores[] = { 11, 2, 14, 1, 7, 13, 15, 5, 8 }; 
-	int n		  = 9;
+	int valores[] = { 10, 5, 4, 3 };
+	int n		  = 4;
 
 	for( int i = 0; i < n; i++ ) {
 		inserirRubroNegra( &raiz, valores[i] );

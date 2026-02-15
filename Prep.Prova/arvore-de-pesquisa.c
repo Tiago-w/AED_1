@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// bst
+
 struct no {
 	int		   valor;
 	struct no* esquerda;
